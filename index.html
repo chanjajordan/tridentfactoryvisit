@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crestar × TridentAir Factory Tour — Booking</title>
+<style>
+:root{
+  --navy:#12314f; --navy2:#1c4a76; --teal:#0f8b8d; --teal-dk:#0a6d6f;
+  --green:#dff5e6; --green-b:#2f9e5f; --amber:#fff3d6; --amber-b:#c98a10;
+  --grey:#eef1f5; --grey-b:#9aa5b1; --red:#c0392b;
+  --ink:#1b2733; --muted:#6b7a8c; --line:#dfe5ec; --bg:#f5f7fa;
+  --radius:10px; --shadow:0 1px 3px rgba(18,49,79,.08),0 8px 24px rgba(18,49,79,.06);
+}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color:var(--ink);background:var(--bg)}
+a{color:var(--teal-dk)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px 60px}
+
+/* ---------- header ---------- */
+header{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);color:#fff;padding:30px 0 26px;margin-bottom:26px}
+header .wrap{padding-bottom:0}
+.brand{font-size:13px;letter-spacing:.14em;text-transform:uppercase;opacity:.8;margin-bottom:6px}
+h1{margin:0 0 6px;font-size:29px;letter-spacing:-.4px;font-weight:650}
+.sub{opacity:.85;font-size:14.5px;margin:0 0 20px}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.fact{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);border-radius:8px;padding:10px 13px}
+.fact dt{font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.72;margin-bottom:3px}
+.fact dd{margin:0;font-size:13.5px;font-weight:550}
+
+/* ---------- status bar ---------- */
+.statusbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:13px 16px;margin-bottom:22px;box-shadow:var(--shadow)}
+.capacity{display:flex;align-items:center;gap:12px;flex:1;min-width:260px}
+.bar{flex:1;height:9px;background:var(--grey);border-radius:99px;overflow:hidden;min-width:110px}
+.bar span{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--teal-dk));width:0;transition:width .4s}
+.capnum{font-weight:650;white-space:nowrap;font-size:14px}
+.conn{font-size:12px;padding:4px 10px;border-radius:99px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.conn.live{background:var(--green);border-color:var(--green-b);color:#1d6b40}
+.conn.local{background:var(--amber);border-color:var(--amber-b);color:#7a5405}
+
+/* ---------- tabs ---------- */
+.tabs{display:flex;gap:4px;border-bottom:2px solid var(--line);margin-bottom:22px}
+.tabs button{background:none;border:0;border-bottom:2px solid transparent;margin-bottom:-2px;padding:10px 16px;
+  font:inherit;font-weight:600;color:var(--muted);cursor:pointer;border-radius:6px 6px 0 0}
+.tabs button:hover{color:var(--ink);background:#fff}
+.tabs button.on{color:var(--navy);border-bottom-color:var(--teal)}
+.panel{display:none}.panel.on{display:block}
+
+/* ---------- legend ---------- */
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-bottom:16px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px;border:1px solid}
+.i-av{background:var(--green);border-color:var(--green-b)}
+.i-bk{background:var(--amber);border-color:var(--amber-b)}
+.i-cl{background:var(--grey);border-color:var(--grey-b)}
+
+/* ---------- calendar ---------- */
+.month{margin-bottom:26px}
+.month h2{font-size:15px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:0 0 12px;font-weight:650}
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(212px,1fr));gap:12px}
+.slot{background:#fff;border:1px solid var(--line);border-left:4px solid var(--green-b);border-radius:var(--radius);
+  padding:13px 15px;cursor:pointer;transition:transform .12s,box-shadow .12s;position:relative;text-align:left;font:inherit;width:100%}
+.slot:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.slot .d{font-size:19px;font-weight:650;letter-spacing:-.3px}
+.slot .day{font-size:12.5px;color:var(--muted);margin-bottom:9px}
+.slot .tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  padding:3px 8px;border-radius:99px;background:var(--green);color:#1d6b40}
+.slot .who{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.4}
+.slot.booked{border-left-color:var(--amber-b);cursor:default}
+.slot.booked:hover{transform:none;box-shadow:none}
+.slot.booked .tag{background:var(--amber);color:#7a5405}
+.slot.closed{border-left-color:var(--grey-b);cursor:default;opacity:.62}
+.slot.closed .tag{background:var(--grey);color:#5b6672}
+
+/* ---------- forms / modal ---------- */
+.mask{display:none;position:fixed;inset:0;background:rgba(18,39,51,.5);z-index:50;padding:24px;overflow:auto}
+.mask.on{display:block}
+.modal{background:#fff;max-width:620px;margin:24px auto;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.3);overflow:hidden}
+.modal header{background:var(--navy);padding:18px 24px;margin:0}
+.modal header h3{margin:0;font-size:18px;font-weight:650}
+.modal header p{margin:4px 0 0;font-size:13.5px;opacity:.85}
+.modal .body{padding:22px 24px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+label{display:block;font-size:12.5px;font-weight:650;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em}
+input,select,textarea{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:7px;font:inherit;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--teal);box-shadow:0 0 0 3px rgba(15,139,141,.14)}
+.field{margin-bottom:14px}
+.hint{font-size:12px;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0}
+.err{color:var(--red);font-size:12.5px;margin-top:8px;display:none}
+.err.on{display:block}
+.actions{display:flex;gap:10px;justify-content:flex-end;padding:16px 24px;background:#fafbfc;border-top:1px solid var(--line)}
+.btn{padding:9px 18px;border-radius:7px;border:1px solid var(--line);background:#fff;font:inherit;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--grey)}
+.btn.pri{background:var(--teal);border-color:var(--teal);color:#fff}
+.btn.pri:hover{background:var(--teal-dk)}
+.btn.danger{color:var(--red);border-color:#f0c9c4}
+.btn.danger:hover{background:#fdf0ee}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* ---------- table ---------- */
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:20px}
+.card .hd{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.card .hd h2{margin:0;font-size:16px;font-weight:650}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{text-align:left;padding:10px 12px;background:#fafbfc;border-bottom:1px solid var(--line);font-size:11.5px;
+  text-transform:uppercase;letter-spacing:.06em;color:var(--muted);white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px}
+.pill.kdl{background:#e3f0fb;color:#1c5a8f}
+.pill.elfa{background:#f3e8fb;color:#6b3a94}
+.empty{padding:34px;text-align:center;color:var(--muted);font-size:14px}
+.tablewrap{overflow-x:auto}
+
+/* ---------- steps ---------- */
+ol.steps{padding-left:20px;margin:0}
+ol.steps li{margin-bottom:9px}
+.note{background:#fffdf3;border:1px solid #f0e2b8;border-radius:8px;padding:13px 15px;font-size:13.5px;color:#6a5613;margin-top:16px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--navy);color:#fff;
+  padding:12px 22px;border-radius:99px;font-size:14px;font-weight:600;box-shadow:0 8px 30px rgba(0,0,0,.25);
+  transition:transform .3s;z-index:99;pointer-events:none}
+.toast.on{transform:translateX(-50%) translateY(0)}
+footer{text-align:center;color:var(--muted);font-size:12.5px;padding:26px 0 0;border-top:1px solid var(--line);margin-top:30px}
+@media (max-width:600px){.grid2{grid-template-columns:1fr}h1{font-size:23px}.modal{margin:0}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand">Crestar × TridentAir</div>
+    <h1>Factory Tour Registration</h1>
+    <p class="sub">TridentAir Factory · July – September 2026 · 2 hours per session</p>
+    <dl class="facts">
+      <div class="fact"><dt>Venue</dt><dd>TridentAir Factory</dd></div>
+      <div class="fact"><dt>Max Centres</dt><dd id="factMax">13 (KDL &amp; ELFA combined)</dd></div>
+      <div class="fact"><dt>Slot Rule</dt><dd>1 centre per date</dd></div>
+      <div class="fact"><dt>Transport</dt><dd>Arranged by preschool</dd></div>
+    </dl>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="statusbar">
+    <div class="capacity">
+      <span class="capnum" id="capNum">0 / 13 centres booked</span>
+      <div class="bar"><span id="capBar"></span></div>
+    </div>
+    <span class="conn" id="conn">Connecting…</span>
+  </div>
+
+  <div class="tabs">
+    <button class="on" data-tab="book">Book a Slot</button>
+    <button data-tab="admin">All Bookings</button>
+    <button data-tab="setup">Dates &amp; Slots</button>
+    <button data-tab="help">How It Works</button>
+  </div>
+
+  <!-- ============ BOOK ============ -->
+  <section class="panel on" id="tab-book">
+    <div class="legend">
+      <span><i class="i-av"></i>Available</span>
+      <span><i class="i-bk"></i>Booked</span>
+      <span><i class="i-cl"></i>Closed</span>
+      <span style="margin-left:auto">Tap an available date to register your centre.</span>
+    </div>
+    <div id="calendar"></div>
+  </section>
+
+  <!-- ============ ADMIN ============ -->
+  <section class="panel" id="tab-admin">
+    <div class="card">
+      <div class="hd">
+        <h2>Centre Registrations</h2>
+        <div style="display:flex;gap:8px">
+          <button class="btn" id="btnCsv">Export CSV</button>
+          <button class="btn" id="btnPrint">Print</button>
+        </div>
+      </div>
+      <div class="tablewrap">
+        <table id="tblBookings">
+          <thead><tr>
+            <th>#</th><th>Date</th><th>Time Slot</th><th>Centre</th><th>Type</th>
+            <th>Teacher-in-Charge</th><th>Contact</th><th>Email</th>
+            <th>Children</th><th>Adults</th><th>Notes</th><th></th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="empty" id="emptyMsg">No registrations yet.</div>
+    </div>
+    <div class="card">
+      <div class="hd"><h2>Totals</h2></div>
+      <div class="tablewrap"><table id="tblTotals"><tbody></tbody></table></div>
+    </div>
+  </section>
+
+  <!-- ============ ORGANISER: DATES & SLOTS ============ -->
+  <section class="panel" id="tab-setup">
+
+    <div class="card" id="pinGate">
+      <div class="hd"><h2>Organiser access</h2></div>
+      <div style="padding:18px 22px">
+        <p style="margin:0 0 14px;color:var(--muted);font-size:13.5px">
+          This tab sets which dates and time slots the preschools can book. Enter the organiser passcode to continue.
+        </p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <input id="pinInput" type="password" placeholder="Passcode" style="max-width:220px" autocomplete="off">
+          <button class="btn pri" id="pinGo" type="button">Unlock</button>
+        </div>
+        <div class="err" id="pinErr">Incorrect passcode.</div>
+      </div>
+    </div>
+
+    <div id="setupUI" style="display:none">
+
+      <div class="card">
+        <div class="hd">
+          <h2>Session settings</h2>
+          <span class="hint">Applies to every date unless a date overrides it below.</span>
+        </div>
+        <div style="padding:18px 22px">
+          <div class="field" style="max-width:240px">
+            <label for="cfgMax">Maximum centres</label>
+            <input id="cfgMax" type="number" min="1" max="500">
+          </div>
+          <label style="margin-top:4px">Default time slots</label>
+          <div id="slotList"></div>
+          <button class="btn" id="btnAddSlot" type="button">+ Add time slot</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="hd">
+          <h2>Available dates</h2>
+          <span class="hint" id="dateCount"></span>
+        </div>
+
+        <div style="padding:16px 22px;border-bottom:1px solid var(--line);background:#fafbfc">
+          <div class="grid2">
+            <div class="field" style="margin-bottom:0">
+              <label for="addDate">Add a single date</label>
+              <div style="display:flex;gap:8px">
+                <input id="addDate" type="date">
+                <button class="btn" id="btnAddDate" type="button">Add</button>
+              </div>
+            </div>
+            <div class="field" style="margin-bottom:0">
+              <label>Add a weekly range</label>
+              <div style="display:flex;gap:8px;align-items:center">
+                <input id="rngFrom" type="date" style="flex:1;min-width:0">
+                <span style="color:var(--muted);font-size:13px">to</span>
+                <input id="rngTo" type="date" style="flex:1;min-width:0">
+              </div>
+              <div id="rngDays" style="margin-top:9px;display:flex;gap:11px;flex-wrap:wrap;font-size:13px"></div>
+              <button class="btn" id="btnAddRange" type="button" style="margin-top:10px">Add all matching dates</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="tablewrap">
+          <table id="tblDates">
+            <thead><tr>
+              <th>Date</th><th>Day</th><th>Status</th><th>Time Slots</th><th>Booked By</th><th></th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="empty" id="noDates" style="display:none">No dates on the calendar yet — add some above.</div>
+      </div>
+
+      <div class="card">
+        <div class="hd">
+          <h2>Publish</h2>
+          <div style="display:flex;gap:8px">
+            <button class="btn" id="btnRevert" type="button">Discard</button>
+            <button class="btn pri" id="btnSaveCfg" type="button">Publish to all centres</button>
+          </div>
+        </div>
+        <div style="padding:14px 22px;font-size:13.5px;color:var(--muted)" id="cfgStatus"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ HELP ============ -->
+  <section class="panel" id="tab-help">
+    <div class="card">
+      <div class="hd"><h2>How to complete your registration</h2></div>
+      <div style="padding:18px 22px">
+        <ol class="steps">
+          <li>On the <strong>Book a Slot</strong> tab, review the calendar and pick a date marked <strong>Available</strong> (green).</li>
+          <li>Fill in your centre details: preschool name, centre type (KDL / ELFA), teacher-in-charge, contact number, email, number of children and number of adults / chaperones.</li>
+          <li>Choose your preferred time slot from the three options for that date.</li>
+          <li>Note any special requirements (e.g. wheelchair access) in the Notes field.</li>
+          <li>Submit. Your booking appears immediately on the shared calendar for all centres.</li>
+          <li>A confirmation email will be sent by the Crestar admin team within 5 working days.</li>
+        </ol>
+        <div class="note">
+          <strong>Please note:</strong> Only one centre may be hosted per date, and only one timing per date. Slot allocation is first-come, first-served, capped at <span id="noteMax">13</span> centres. Transport to and from TridentAir Factory is to be arranged by individual preschools. Submission does not guarantee your selected slot until confirmed by Crestar admin.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>Crestar × TridentAir Factory Tour 2026 · Converted from Crestar_FactoryTour_Registration(2026).xlsx</footer>
+</div>
+
+<!-- ============ MODAL ============ -->
+<div class="mask" id="mask">
+  <div class="modal" role="dialog" aria-modal="true">
+    <header>
+      <h3 id="mTitle">Register Your Centre</h3>
+      <p id="mDate">—</p>
+    </header>
+    <div class="body">
+      <form id="frm" autocomplete="on">
+        <div class="field">
+          <label for="f_slot">Preferred Time Slot</label>
+          <select id="f_slot" required></select>
+        </div>
+        <div class="grid2">
+          <div class="field">
+            <label for="f_centre">Name of Preschool / Centre</label>
+            <input id="f_centre" required placeholder="e.g. EQE Sunshine Place">
+          </div>
+          <div class="field">
+            <label for="f_type">Centre Type</label>
+            <select id="f_type" required>
+              <option value="">Select…</option>
+              <option value="KDL">KDL</option>
+              <option value="ELFA">ELFA</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid2">
+          <div class="field">
+            <label for="f_teacher">Teacher-in-Charge</label>
+            <input id="f_teacher" required placeholder="Full name">
+          </div>
+          <div class="field">
+            <label for="f_phone">Contact Number</label>
+            <input id="f_phone" required inputmode="tel" placeholder="8 digits">
+          </div>
+        </div>
+        <div class="field">
+          <label for="f_email">Email Address</label>
+          <input id="f_email" type="email" required placeholder="name@kinderland.com.sg">
+        </div>
+        <div class="grid2">
+          <div class="field">
+            <label for="f_kids">No. of Children</label>
+            <input id="f_kids" type="number" min="1" max="200" required>
+          </div>
+          <div class="field">
+            <label for="f_adults">No. of Adults / Chaperones</label>
+            <input id="f_adults" type="number" min="1" max="100" required>
+          </div>
+        </div>
+        <div class="field">
+          <label for="f_notes">Special Requirements / Notes <span class="hint">(optional)</span></label>
+          <textarea id="f_notes" rows="2" placeholder="e.g. wheelchair access required"></textarea>
+        </div>
+        <div class="err" id="mErr"></div>
+      </form>
+    </div>
+    <div class="actions">
+      <button class="btn" id="btnCancel" type="button">Cancel</button>
+      <button class="btn pri" id="btnSave" type="button">Confirm Booking</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PER-DATE TIME SLOTS (organiser) ============ -->
+<div class="mask" id="mask2">
+  <div class="modal" role="dialog" aria-modal="true" style="max-width:520px">
+    <header>
+      <h3>Time Slots For This Date</h3>
+      <p id="sDate">—</p>
+    </header>
+    <div class="body">
+      <div class="field">
+        <label for="sSlots">One slot per line <span class="hint">(leave empty to use the default slots)</span></label>
+        <textarea id="sSlots" rows="5" placeholder="09:30 AM – 11:30 AM&#10;10:00 AM – 12:00 PM"></textarea>
+      </div>
+      <p style="font-size:12.5px;color:var(--muted);margin:0">
+        Default slots: <span id="sDefault"></span>
+      </p>
+    </div>
+    <div class="actions">
+      <button class="btn" id="sCancel" type="button">Cancel</button>
+      <button class="btn" id="sUseDefault" type="button">Use default</button>
+      <button class="btn pri" id="sSave" type="button">Apply</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+/* ══════════════════════════════════════════════════════════════════
+   1. FIREBASE — shares the OctoCRM project (octocrm1)
+   ------------------------------------------------------------------
+   Same keys as octocrm/index.html, same Realtime Database. Bookings
+   live in their OWN top-level node (`crestarTour2026`) so the OctoCRM
+   app's `octoCRM_v4` value-listener never sees them, and nothing here
+   can touch CRM data.
+
+   ⚠ REQUIRED IN THE FIREBASE CONSOLE — Realtime Database → Rules.
+   Add this alongside the existing octoCRM_v4 / sharedFieldServiceCal_v1
+   entries (do NOT replace them). Without it every write is rejected
+   with PERMISSION_DENIED and this page silently drops to local mode:
+
+     "crestarTour2026": { ".read": true, ".write": true }
+
+   If the config is ever blanked back to YOUR_* placeholders the page
+   falls back to LOCAL mode (this browser only) and still works.
+   ══════════════════════════════════════════════════════════════════ */
+const FIREBASE_CONFIG = {
+  apiKey:            "AIzaSyCSQAS7mFBlTfmz0FVWaSLgI-Puk1Y3sN4",
+  authDomain:        "octocrm1.firebaseapp.com",
+  databaseURL:       "https://octocrm1-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:         "octocrm1",
+  storageBucket:     "octocrm1.firebasestorage.app",
+  messagingSenderId: "212247591529",
+  appId:             "1:212247591529:web:4a076e40a71b59646b00f8"
+};
+const NODE = "crestarTour2026";
+
+/* ── DEFAULTS ──────────────────────────────────────────────────────
+   These seed the shared config the very first time the page runs.
+   After that the organiser edits everything on the "Dates & Slots"
+   tab and the values below are never read again. Editing them here
+   will NOT change a calendar that has already been published.
+   ────────────────────────────────────────────────────────────────── */
+const DEFAULT_MAX   = 13;
+const DEFAULT_SLOTS = ["09:30 AM – 11:30 AM","09:45 AM – 11:45 AM","10:00 AM – 12:00 PM"];
+const DEFAULT_DATES = [   // from the 'Available Dates' sheet
+  "02/07/2026","03/07/2026","09/07/2026","10/07/2026",
+  "16/07/2026","17/07/2026","23/07/2026","24/07/2026",
+  "30/07/2026","31/07/2026","13/08/2026","14/08/2026",
+  "20/08/2026","21/08/2026","27/08/2026","28/08/2026",
+  "03/09/2026","04/09/2026","17/09/2026","18/09/2026",
+  "24/09/2026","25/09/2026"
+];
+
+/* Passcode for the organiser-only "Dates & Slots" tab.
+   ⚠ SOFT GATE ONLY — this page is public HTML, so anyone who opens
+   view-source can read this string. It keeps preschools from wandering
+   into the settings; it is NOT security. Real protection needs Firebase
+   Auth + rules that only let a signed-in organiser write /config. */
+const ORGANISER_PIN = "crestar2026";
+
+/* Bookings already made in the spreadsheet — seeded on first run only. */
+const SEED = [{
+  date:"14/08/2026", slot:"10:00 AM – 12:00 PM",
+  centre:"EQE Sunshine Place", type:"KDL", teacher:"Darshini",
+  phone:"87531478", email:"darshini.subramaniam@kinderland.com.sg",
+  kids:36, adults:5, notes:"nil", created:Date.parse("2026-01-01")
+}];
+
+/* ══════════════════════════════════════════════════════════════════
+   2. CONFIG MODEL — what the organiser controls
+   ------------------------------------------------------------------
+   cfg = {
+     max:   Number,                       // centre cap
+     slots: [String],                     // default time slots
+     dates: { "02-07-2026": { date:"02/07/2026",
+                              closed:Boolean,
+                              slots:[String]|null } }   // null = use default
+   }
+   Stored at `crestarTour2026/config` and streamed to every open page,
+   so republishing updates the preschools' calendars live.
+   ══════════════════════════════════════════════════════════════════ */
+const keyOf = d => d.replace(/\//g, "-");   // "02/07/2026" → "02-07-2026"
+let cfg = null;
+
+function defaultCfg(){
+  const dates = {};
+  DEFAULT_DATES.forEach(d => { dates[keyOf(d)] = { date:d, closed:false }; });
+  return { max:DEFAULT_MAX, slots:[...DEFAULT_SLOTS], dates };
+}
+
+/* Firebase strips empty arrays/objects and null fields, so never trust
+   the shape coming back off the wire — rebuild it defensively. */
+function normCfg(raw){
+  const c = raw && typeof raw === "object" ? raw : {};
+  // Has a config ever been published? Firebase deletes empty objects, so an
+  // organiser who removes every date leaves `dates` missing — that must stay
+  // an empty calendar, NOT silently resurrect DEFAULT_DATES.
+  const published = !!(c.slots || c.dates || c.max);
+  const slots = (Array.isArray(c.slots) ? c.slots : []).map(s => String(s).trim()).filter(Boolean);
+  const out = {
+    max: Math.max(1, Math.round(+c.max) || DEFAULT_MAX),
+    slots: slots.length ? slots : [...DEFAULT_SLOTS],
+    dates: {}
+  };
+  const src = c.dates && typeof c.dates === "object" ? c.dates
+            : published ? {} : defaultCfg().dates;
+  for(const v of Object.values(src)){
+    if(!v || !v.date) continue;
+    const own = (Array.isArray(v.slots) ? v.slots : []).map(s => String(s).trim()).filter(Boolean);
+    out.dates[keyOf(v.date)] = { date:v.date, closed:!!v.closed, slots: own.length ? own : null };
+  }
+  return out;
+}
+const cloneCfg = c => JSON.parse(JSON.stringify(c));
+
+/* ── date helpers (day-of-week is derived, never stored) ─────────── */
+const DAY_NAMES   = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const MONTH_NAMES = ["January","February","March","April","May","June",
+                     "July","August","September","October","November","December"];
+const pad2     = n => String(n).padStart(2,"0");
+const parseDMY = d => { const [dd,mm,yy] = String(d).split("/").map(Number); return new Date(yy, mm-1, dd); };
+const fmtDMY   = dt => `${pad2(dt.getDate())}/${pad2(dt.getMonth()+1)}/${dt.getFullYear()}`;
+const fmtISO   = dt => `${dt.getFullYear()}-${pad2(dt.getMonth()+1)}-${pad2(dt.getDate())}`;
+const isoToDMY = s => { const [yy,mm,dd] = s.split("-"); return `${dd}/${mm}/${yy}`; };
+const dayName  = d => DAY_NAMES[parseDMY(d).getDay()];
+const monthLbl = d => { const p = d.split("/"); return `${MONTH_NAMES[+p[1]-1]} ${p[2]}`; };
+const todayMid = () => { const t = new Date(); t.setHours(0,0,0,0); return t; };
+const isPast   = d => parseDMY(d) < todayMid();
+
+const sortKey   = d => { const [dd,mm,yy] = d.split("/"); return yy+mm+dd; };
+const tourDates = () => Object.values(cfg.dates).sort((a,b) => sortKey(a.date).localeCompare(sortKey(b.date)));
+const slotsFor  = d => { const e = cfg.dates[keyOf(d)]; return (e && e.slots) || cfg.slots; };
+
+/* ══════════════════════════════════════════════════════════════════
+   3. STORAGE LAYER — Realtime Database if reachable, else localStorage
+   ══════════════════════════════════════════════════════════════════ */
+const LS_KEY = "crestar_tour_bookings_2026";
+const LS_CFG = "crestar_tour_config_2026";
+let bookings = [];
+let store = null;                       // set below
+const configured = !String(FIREBASE_CONFIG.apiKey).startsWith("YOUR_");
+
+const LocalStore = {
+  mode:"local",
+  async init(render){
+    if(localStorage.getItem(LS_KEY) === null) localStorage.setItem(LS_KEY, JSON.stringify(SEED));
+    if(localStorage.getItem(LS_CFG) === null) localStorage.setItem(LS_CFG, JSON.stringify(defaultCfg()));
+    this._render = render; this._emit();
+    addEventListener("storage", e => { if(e.key===LS_KEY || e.key===LS_CFG) this._emit(); });
+  },
+  _emit(){
+    try{ bookings = JSON.parse(localStorage.getItem(LS_KEY)) || []; }
+    catch{ bookings = []; }
+    try{ cfg = normCfg(JSON.parse(localStorage.getItem(LS_CFG))); }
+    catch{ cfg = defaultCfg(); }
+    this._render();
+  },
+  async add(rec){
+    const all = JSON.parse(localStorage.getItem(LS_KEY) || "[]");
+    if(all.some(b => b.date === rec.date)) throw new Error("TAKEN");
+    if(all.length >= cfg.max) throw new Error("FULL");
+    rec.id = "loc_" + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+    all.push(rec);
+    localStorage.setItem(LS_KEY, JSON.stringify(all));
+    this._emit();
+  },
+  async remove(id){
+    const all = (JSON.parse(localStorage.getItem(LS_KEY) || "[]")).filter(b => b.id !== id);
+    localStorage.setItem(LS_KEY, JSON.stringify(all));
+    this._emit();
+  },
+  async saveConfig(next){
+    localStorage.setItem(LS_CFG, JSON.stringify(next));
+    this._emit();
+  }
+};
+
+const FireDB = {
+  mode:"live", db:null, api:null, root:null, list:null,
+  async init(render){
+    const [app, rt] = await Promise.all([
+      import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"),
+      import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js")
+    ]);
+    this.api  = rt;
+    this.db   = rt.getDatabase(app.initializeApp(FIREBASE_CONFIG));
+    this.root = rt.ref(this.db, NODE);
+    this.list = rt.ref(this.db, NODE + "/bookings");
+
+    // One-time bootstrap of the seed booking + the starting calendar.
+    // Aborts (returns undefined) the moment the node exists, so a later
+    // cancellation can never resurrect the seed and republishing the
+    // config is never overwritten by the DEFAULT_* constants.
+    await rt.runTransaction(this.root, cur => {
+      if(cur) return;
+      const b = {};
+      SEED.forEach(s => { b[keyOf(s.date)] = s; });
+      return { seeded:true, bookings:b, config:defaultCfg() };
+    });
+
+    // live shared calendar — bookings AND the organiser's config stream
+    // to every open page, so a republish updates preschools in real time
+    rt.onValue(this.root, snap => {
+      const v = snap.val() || {};
+      cfg = normCfg(v.config);
+      bookings = Object.entries(v.bookings || {}).map(([id,b]) => ({ ...b, id }));
+      render();
+    }, err => { console.error(err); toast("Sync error: " + err.message); });
+  },
+  async add(rec){
+    const rt = this.api, key = keyOf(rec.date);
+    let why = null;
+    // Transaction on the whole bookings map: the date-uniqueness check and
+    // the centre cap are both evaluated against server state, so two
+    // centres submitting at once cannot both win.
+    const res = await rt.runTransaction(this.list, cur => {
+      why = null;
+      const all = cur || {};
+      if(all[key]){ why = "TAKEN"; return; }
+      if(Object.keys(all).length >= cfg.max){ why = "FULL"; return; }
+      return { ...all, [key]: rec };
+    });
+    if(!res.committed) throw new Error(why || "TAKEN");
+  },
+  async remove(id){
+    await this.api.remove(this.api.ref(this.db, NODE + "/bookings/" + id));
+  },
+  async saveConfig(next){
+    await this.api.set(this.api.ref(this.db, NODE + "/config"), next);
+  }
+};
+
+/* ══════════════════════════════════════════════════════════════════
+   4. RENDERING
+   ══════════════════════════════════════════════════════════════════ */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const byDate = () => Object.fromEntries(bookings.map(b => [b.date, b]));
+
+function render(){
+  const map = byDate();
+  const n = bookings.length;
+  const all = tourDates();
+  $("#capNum").textContent = `${n} / ${cfg.max} centres booked`;
+  $("#capBar").style.width = Math.min(100, n / cfg.max * 100) + "%";
+  $("#factMax").textContent = `${cfg.max} (KDL & ELFA combined)`;
+  $("#noteMax").textContent = cfg.max;
+
+  // ---- calendar (months derived from whatever the organiser published) ----
+  const full = n >= cfg.max;
+  const months = [];
+  for(const d of all){
+    const lbl = monthLbl(d.date);
+    if(!months.length || months[months.length-1].lbl !== lbl) months.push({ lbl, rows:[] });
+    months[months.length-1].rows.push(d);
+  }
+  let html = "";
+  for(const m of months){
+    html += `<div class="month"><h2>${esc(m.lbl)}</h2><div class="slots">`;
+    for(const d of m.rows){
+      const b = map[d.date];
+      const past = !b && isPast(d.date);
+      const shut = !b && !past && (d.closed || full);
+      const cls = b ? "booked" : (past || shut) ? "closed" : "";
+      const tag = b ? "Booked" : past ? "Past" : d.closed ? "Closed" : full ? "Full" : "Available";
+      const nSlots = slotsFor(d.date).length;
+      const who = b
+        ? `${esc(b.centre)} (${esc(b.type)})<br>${esc(b.slot)}`
+        : past ? "Date has passed"
+        : d.closed ? "Not offered"
+        : full ? `${cfg.max}-centre cap reached`
+        : `${nSlots} time slot${nSlots===1?"":"s"} open`;
+      html += `<button class="slot ${cls}" data-date="${esc(d.date)}" ${b||past||shut?"disabled":""}>
+        <div class="d">${esc(d.date.slice(0,5))}</div>
+        <div class="day">${esc(dayName(d.date))}</div>
+        <span class="tag">${tag}</span>
+        <div class="who">${who}</div></button>`;
+    }
+    html += `</div></div>`;
+  }
+  $("#calendar").innerHTML = html || `<div class="empty">No tour dates have been published yet.</div>`;
+  $("#calendar").querySelectorAll(".slot:not([disabled])")
+    .forEach(el => el.onclick = () => openModal(el.dataset.date));
+
+  // ---- admin table ----
+  const sorted = [...bookings].sort((a,b) => sortKey(a.date).localeCompare(sortKey(b.date)));
+  const tb = $("#tblBookings").tBodies[0];
+  tb.innerHTML = sorted.map((b,i) => `<tr>
+    <td>${i+1}</td><td><strong>${esc(b.date)}</strong></td><td>${esc(b.slot)}</td>
+    <td>${esc(b.centre)}</td>
+    <td><span class="pill ${b.type==='KDL'?'kdl':'elfa'}">${esc(b.type)}</span></td>
+    <td>${esc(b.teacher)}</td><td>${esc(b.phone)}</td>
+    <td><a href="mailto:${esc(b.email)}">${esc(b.email)}</a></td>
+    <td>${esc(b.kids)}</td><td>${esc(b.adults)}</td><td>${esc(b.notes||"—")}</td>
+    <td><button class="btn danger" data-del="${esc(b.id)}" style="padding:4px 10px;font-size:12px">Cancel</button></td>
+  </tr>`).join("");
+  $("#emptyMsg").style.display = sorted.length ? "none" : "block";
+  tb.querySelectorAll("[data-del]").forEach(el => el.onclick = () => cancelBooking(el.dataset.del, sorted));
+
+  // ---- totals ----
+  const kids = sorted.reduce((s,b) => s + (+b.kids||0), 0);
+  const adults = sorted.reduce((s,b) => s + (+b.adults||0), 0);
+  const kdl = sorted.filter(b => b.type === "KDL").length;
+  // bookable = published, still open, not in the past, not already taken
+  const openLeft = all.filter(d => !d.closed && !isPast(d.date) && !map[d.date]).length;
+  $("#tblTotals").tBodies[0].innerHTML = `
+    <tr><th style="width:60%">Centres registered</th><td><strong>${sorted.length}</strong> of ${cfg.max} &nbsp;<span style="color:var(--muted)">(${kdl} KDL · ${sorted.length-kdl} ELFA)</span></td></tr>
+    <tr><th>Total children</th><td><strong>${kids}</strong></td></tr>
+    <tr><th>Total adults / chaperones</th><td><strong>${adults}</strong></td></tr>
+    <tr><th>Total pax</th><td><strong>${kids+adults}</strong></td></tr>
+    <tr><th>Dates still available</th><td><strong>${full ? 0 : openLeft}</strong> <span style="color:var(--muted)">of ${all.length} published</span></td></tr>`;
+
+  // the organiser's editor is NOT rebuilt here — that would wipe whatever
+  // they are mid-way through typing. It only flags that the shared copy moved.
+  flagRemoteCfgChange();
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   5. BOOKING MODAL
+   ══════════════════════════════════════════════════════════════════ */
+let activeDate = null;
+
+function openModal(date){
+  activeDate = date;
+  $("#mDate").textContent = `${dayName(date)}, ${date} · 2-hour session`;
+  $("#f_slot").innerHTML = slotsFor(date).map(s => `<option>${esc(s)}</option>`).join("");
+  $("#frm").reset();
+  $("#f_slot").selectedIndex = 0;
+  $("#mErr").classList.remove("on");
+  $("#mask").classList.add("on");
+  setTimeout(() => $("#f_centre").focus(), 60);
+}
+const closeModal = () => $("#mask").classList.remove("on");
+
+$("#btnCancel").onclick = closeModal;
+$("#mask").onclick = e => { if(e.target.id === "mask") closeModal(); };
+addEventListener("keydown", e => {
+  if(e.key !== "Escape") return;
+  if($("#mask2").classList.contains("on")) closeSlotEditor(); else closeModal();
+});
+
+$("#btnSave").onclick = async () => {
+  const frm = $("#frm");
+  if(!frm.reportValidity()) return;
+  const phone = $("#f_phone").value.replace(/\s+/g,"");
+  if(!/^[0-9+]{8,15}$/.test(phone)) return showErr("Please enter a valid contact number (8–15 digits).");
+
+  const rec = {
+    date: activeDate, slot: $("#f_slot").value,
+    centre: $("#f_centre").value.trim(), type: $("#f_type").value,
+    teacher: $("#f_teacher").value.trim(), phone,
+    email: $("#f_email").value.trim(),
+    kids: +$("#f_kids").value, adults: +$("#f_adults").value,
+    notes: $("#f_notes").value.trim() || "nil",
+    created: Date.now()
+  };
+
+  const btn = $("#btnSave");
+  btn.disabled = true; btn.textContent = "Saving…";
+  try{
+    await store.add(rec);
+    closeModal();
+    toast(`Booked — ${rec.centre}, ${rec.date}`);
+  }catch(err){
+    showErr(err.message === "TAKEN"
+      ? "Sorry, that date was just taken by another centre. Please pick a different date."
+      : err.message === "FULL"
+      ? `All ${cfg.max} centre places have been filled.`
+      : "Could not save: " + err.message);
+  }finally{
+    btn.disabled = false; btn.textContent = "Confirm Booking";
+  }
+};
+function showErr(msg){ const e = $("#mErr"); e.textContent = msg; e.classList.add("on"); }
+
+async function cancelBooking(id, list){
+  const b = list.find(x => x.id === id);
+  if(!confirm(`Cancel the booking for ${b.centre} on ${b.date}?\nThis frees the date for other centres.`)) return;
+  try{ await store.remove(id); toast("Booking cancelled"); }
+  catch(e){ toast("Could not cancel: " + e.message); }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   6. ORGANISER EDITOR — dates, time slots, centre cap
+   ------------------------------------------------------------------
+   Edits happen on `draft`, a private copy. Nothing reaches the other
+   centres until "Publish" writes it to the shared config, so a
+   half-finished calendar is never visible to a preschool.
+   ══════════════════════════════════════════════════════════════════ */
+let draft = null;         // working copy while the editor is open
+let unlocked = false;
+
+const dirty = () => draft && JSON.stringify(draft) !== JSON.stringify(cfg);
+
+// Called after every incoming snapshot: keeps the editor's status line
+// truthful when someone else republishes while this organiser is editing.
+function flagRemoteCfgChange(){ if(unlocked && draft) markDirty(); }
+
+$("#pinGo").onclick = () => {
+  if($("#pinInput").value.trim() !== ORGANISER_PIN){
+    $("#pinErr").classList.add("on");
+    return;
+  }
+  unlocked = true;
+  $("#pinErr").classList.remove("on");
+  $("#pinInput").value = "";
+  $("#pinGate").style.display = "none";
+  $("#setupUI").style.display = "block";
+  loadDraft();
+};
+$("#pinInput").addEventListener("keydown", e => { if(e.key === "Enter") $("#pinGo").click(); });
+
+function loadDraft(){
+  draft = cloneCfg(cfg);
+  renderSetup();
+}
+
+/* ── weekday checkboxes for the bulk range adder ─────────────────── */
+$("#rngDays").innerHTML = DAY_NAMES.map((d,i) =>
+  `<label style="font-weight:400;text-transform:none;letter-spacing:0;margin:0;display:inline-flex;gap:5px;align-items:center;cursor:pointer">
+     <input type="checkbox" data-dow="${i}" ${i===4||i===5?"checked":""} style="width:auto;margin:0"> ${d.slice(0,3)}
+   </label>`).join("");
+
+function renderSetup(){
+  if(!draft) return;
+
+  // ---- cap ----
+  $("#cfgMax").value = draft.max;
+
+  // ---- default time slots ----
+  $("#slotList").innerHTML = draft.slots.map((s,i) => `
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <input data-slot="${i}" value="${esc(s)}" placeholder="e.g. 09:30 AM – 11:30 AM">
+      <button class="btn danger" data-slotdel="${i}" type="button" style="padding:6px 12px">Remove</button>
+    </div>`).join("") || `<p style="color:var(--muted);font-size:13px;margin:0 0 8px">No time slots — add at least one.</p>`;
+  $("#slotList").querySelectorAll("[data-slot]").forEach(el =>
+    el.oninput = () => { draft.slots[+el.dataset.slot] = el.value; markDirty(); });
+  $("#slotList").querySelectorAll("[data-slotdel]").forEach(el =>
+    el.onclick = () => {
+      if(draft.slots.length <= 1) return toast("Keep at least one default time slot");
+      draft.slots.splice(+el.dataset.slotdel, 1); renderSetup(); markDirty();
+    });
+
+  // ---- dates ----
+  const map = byDate();
+  const rows = Object.values(draft.dates).sort((a,b) => sortKey(a.date).localeCompare(sortKey(b.date)));
+  const tb = $("#tblDates").tBodies[0];
+  tb.innerHTML = rows.map(d => {
+    const k = keyOf(d.date);
+    const b = map[d.date];
+    const past = isPast(d.date);
+    const custom = !!d.slots;
+    return `<tr${past?' style="opacity:.55"':''}>
+      <td><strong>${esc(d.date)}</strong>${past?' <span style="color:var(--muted);font-size:11.5px">past</span>':''}</td>
+      <td>${esc(dayName(d.date))}</td>
+      <td><select data-open="${k}" style="padding:5px 8px">
+            <option value="open"${d.closed?"":" selected"}>Open</option>
+            <option value="closed"${d.closed?" selected":""}>Closed</option>
+          </select></td>
+      <td><button class="btn" data-slots="${k}" type="button" style="padding:4px 10px;font-size:12px">
+            ${custom ? `Custom (${d.slots.length})` : `Default (${draft.slots.length})`}
+          </button></td>
+      <td>${b ? `${esc(b.centre)}<br><span style="color:var(--muted);font-size:12px">${esc(b.slot)}</span>` : '<span style="color:var(--muted)">—</span>'}</td>
+      <td><button class="btn danger" data-datedel="${k}" type="button" style="padding:4px 10px;font-size:12px">Remove</button></td>
+    </tr>`;
+  }).join("");
+  $("#noDates").style.display = rows.length ? "none" : "block";
+  $("#dateCount").textContent = `${rows.length} date${rows.length===1?"":"s"} · ${rows.filter(d=>!d.closed && !isPast(d.date)).length} open & upcoming`;
+
+  tb.querySelectorAll("[data-open]").forEach(el =>
+    el.onchange = () => { draft.dates[el.dataset.open].closed = el.value === "closed"; renderSetup(); markDirty(); });
+  tb.querySelectorAll("[data-datedel]").forEach(el =>
+    el.onclick = () => removeDate(el.dataset.datedel));
+  tb.querySelectorAll("[data-slots]").forEach(el =>
+    el.onclick = () => openSlotEditor(el.dataset.slots));
+
+  markDirty();
+}
+
+function markDirty(){
+  const d = dirty();
+  $("#cfgStatus").innerHTML = d
+    ? '<strong style="color:var(--amber-b)">Unpublished changes</strong> — centres still see the previously published calendar. Discard reloads the live copy.'
+    : "Everything published. Centres are seeing this calendar.";
+  $("#btnSaveCfg").disabled = !d;
+  $("#btnRevert").disabled = !d;
+}
+
+$("#cfgMax").oninput = () => {
+  if(!draft) return;
+  draft.max = Math.max(1, Math.round(+$("#cfgMax").value) || 1);
+  markDirty();
+};
+
+$("#btnAddSlot").onclick = () => { if(!draft) return; draft.slots.push(""); renderSetup(); };
+
+function addDateStr(dmy){
+  const k = keyOf(dmy);
+  if(draft.dates[k]) return false;
+  draft.dates[k] = { date:dmy, closed:false, slots:null };
+  return true;
+}
+
+$("#btnAddDate").onclick = () => {
+  const v = $("#addDate").value;
+  if(!v) return toast("Pick a date first");
+  if(!addDateStr(isoToDMY(v))) return toast("That date is already on the list");
+  $("#addDate").value = "";
+  renderSetup();
+};
+
+$("#btnAddRange").onclick = () => {
+  const a = $("#rngFrom").value, b = $("#rngTo").value;
+  if(!a || !b) return toast("Pick both a start and an end date");
+  const from = new Date(a + "T00:00:00"), to = new Date(b + "T00:00:00");
+  if(to < from) return toast("The end date is before the start date");
+  const dows = [...$("#rngDays").querySelectorAll("input:checked")].map(el => +el.dataset.dow);
+  if(!dows.length) return toast("Tick at least one weekday");
+  if((to - from) / 864e5 > 400) return toast("Keep the range under about a year");
+  let added = 0;
+  for(let dt = new Date(from); dt <= to; dt.setDate(dt.getDate() + 1)){
+    if(dows.includes(dt.getDay()) && addDateStr(fmtDMY(dt))) added++;
+  }
+  renderSetup();
+  toast(added ? `Added ${added} date${added===1?"":"s"}` : "No new dates matched");
+};
+
+function removeDate(k){
+  const d = draft.dates[k];
+  if(!d) return;
+  const b = byDate()[d.date];
+  if(b) return alert(`${b.centre} is booked on ${d.date}.\n\nCancel that booking on the All Bookings tab first, or set the date to Closed instead.`);
+  if(!confirm(`Remove ${d.date} from the calendar?`)) return;
+  delete draft.dates[k];
+  renderSetup();
+}
+
+/* ── per-date slot override ──────────────────────────────────────── */
+let slotEditKey = null;
+function openSlotEditor(k){
+  slotEditKey = k;
+  const d = draft.dates[k];
+  $("#sDate").textContent = `${dayName(d.date)}, ${d.date}`;
+  $("#sSlots").value = (d.slots || []).join("\n");
+  $("#sDefault").textContent = draft.slots.join(" · ");
+  $("#mask2").classList.add("on");
+  setTimeout(() => $("#sSlots").focus(), 60);
+}
+const closeSlotEditor = () => { $("#mask2").classList.remove("on"); slotEditKey = null; };
+$("#sCancel").onclick = closeSlotEditor;
+$("#mask2").onclick = e => { if(e.target.id === "mask2") closeSlotEditor(); };
+$("#sUseDefault").onclick = () => {
+  draft.dates[slotEditKey].slots = null;
+  closeSlotEditor(); renderSetup();
+};
+$("#sSave").onclick = () => {
+  const lines = $("#sSlots").value.split("\n").map(s => s.trim()).filter(Boolean);
+  draft.dates[slotEditKey].slots = lines.length ? lines : null;
+  closeSlotEditor(); renderSetup();
+};
+
+/* ── publish / discard ───────────────────────────────────────────── */
+$("#btnRevert").onclick = () => {
+  if(dirty() && !confirm("Discard your unpublished changes and reload the live calendar?")) return;
+  loadDraft();
+};
+
+$("#btnSaveCfg").onclick = async () => {
+  const slots = draft.slots.map(s => s.trim()).filter(Boolean);
+  if(!slots.length) return toast("Add at least one default time slot");
+  draft.slots = slots;
+
+  // A booking whose date the organiser closed/removed would be orphaned.
+  const orphans = bookings.filter(b => {
+    const d = draft.dates[keyOf(b.date)];
+    return !d || d.closed;
+  });
+  if(orphans.length && !confirm(
+      `${orphans.length} existing booking${orphans.length===1?" is":"s are"} on a date you have closed or removed:\n\n` +
+      orphans.map(b => `  • ${b.date} — ${b.centre}`).join("\n") +
+      `\n\nThose bookings stay in the system and still show on the All Bookings tab, but their date disappears from the calendar. Publish anyway?`)) return;
+
+  const btn = $("#btnSaveCfg");
+  btn.disabled = true; btn.textContent = "Publishing…";
+  try{
+    await store.saveConfig(draft);
+    toast("Calendar published to all centres");
+    loadDraft();
+  }catch(e){
+    toast("Could not publish: " + e.message);
+  }finally{
+    btn.textContent = "Publish to all centres";
+    markDirty();
+  }
+};
+
+/* ══════════════════════════════════════════════════════════════════
+   7. TABS / EXPORT / TOAST
+   ══════════════════════════════════════════════════════════════════ */
+document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
+  document.querySelectorAll(".tabs button").forEach(x => x.classList.toggle("on", x === b));
+  document.querySelectorAll(".panel").forEach(p => p.classList.toggle("on", p.id === "tab-" + b.dataset.tab));
+});
+
+$("#btnPrint").onclick = () => window.print();
+$("#btnCsv").onclick = () => {
+  const head = ["No.","Preferred Date","Time Slot","Name of Preschool / Centre","Centre Type","Teacher-in-Charge","Contact Number","Email Address","No. of Children","No. of Adults","Notes"];
+  const q = v => `"${String(v ?? "").replace(/"/g,'""')}"`;
+  const rows = [...bookings].sort((a,b) => sortKey(a.date).localeCompare(sortKey(b.date)))
+    .map((b,i) => [i+1,b.date,b.slot,b.centre,b.type,b.teacher,b.phone,b.email,b.kids,b.adults,b.notes].map(q).join(","));
+  const csv = "﻿" + [head.map(q).join(","), ...rows].join("\r\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([csv], {type:"text/csv;charset=utf-8"}));
+  a.download = "Crestar_FactoryTour_Bookings_2026.csv";
+  a.click(); URL.revokeObjectURL(a.href);
+};
+
+let toastT;
+function toast(msg){
+  const t = $("#toast"); t.textContent = msg; t.classList.add("on");
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("on"), 3200);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   8. BOOT
+   ══════════════════════════════════════════════════════════════════ */
+(async () => {
+  const badge = $("#conn");
+  if(configured){
+    try{
+      store = FireDB;
+      await store.init(render);
+      badge.textContent = "● Live — shared calendar";
+      badge.className = "conn live";
+      badge.title = "Bookings sync in real time via Firebase (octocrm1).";
+      return;
+    }catch(e){
+      console.error("Firebase init failed:", e);
+      toast(String(e.message).includes("permission_denied") || String(e.code).includes("PERMISSION_DENIED")
+        ? "Database rules block this page — using local mode"
+        : "Firebase unavailable — using local mode");
+    }
+  }
+  store = LocalStore;
+  await store.init(render);
+  badge.textContent = configured ? "● Offline — this browser only" : "● Local mode — add Firebase config to share";
+  badge.className = "conn local";
+  badge.title = configured
+    ? "Could not reach the shared database — bookings save to this browser only. Check the Realtime Database rules allow read/write on \"" + NODE + "\"."
+    : "Bookings save to this browser only. Paste your Firebase config at the top of the <script> block to enable the shared calendar.";
+})();
+</script>
+</body>
+</html>
