@@ -51,6 +51,11 @@ input:focus,select:focus,textarea:focus{outline:0;border-color:var(--teal);box-s
 .chips button{padding:8px 15px;border-radius:99px;border:1px solid var(--line);background:#fff;font:inherit;font-weight:600;font-size:14px;color:var(--muted);cursor:pointer}
 .chips button.on{background:var(--teal);border-color:var(--teal);color:#fff}
 
+.share{display:flex;gap:10px;align-items:flex-start;margin:16px 0 0;padding:12px 13px;
+  background:var(--bg);border:1px solid var(--line);border-radius:8px;
+  font-size:12.8px;line-height:1.5;color:var(--ink);text-transform:none;letter-spacing:0;font-weight:400}
+.share input{width:18px;height:18px;flex:0 0 auto;margin-top:1px;accent-color:var(--teal)}
+
 .err{color:var(--red);font-size:13px;margin:4px 0 12px;display:none}
 .err.on{display:block}
 .btn{padding:10px 18px;border-radius:7px;border:1px solid var(--line);background:#fff;font:inherit;font-weight:600;cursor:pointer}
@@ -156,7 +161,7 @@ footer{text-align:center;color:var(--muted);font-size:12.5px;padding:22px 0 0;bo
           <label for="f_improve">What could we do better?</label>
           <textarea id="f_improve" rows="3" placeholder="Anything about timing, safety, activities, facilities…"></textarea>
         </div>
-        <div class="field" style="margin-bottom:4px">
+        <div class="field">
           <span class="lbl">Would you recommend this tour to other centres?</span>
           <div class="chips" data-chip="recommend">
             <button type="button" data-v="Yes">Yes</button>
@@ -164,6 +169,12 @@ footer{text-align:center;color:var(--muted);font-size:12.5px;padding:22px 0 0;bo
             <button type="button" data-v="No">No</button>
           </div>
         </div>
+        <label class="share">
+          <input type="checkbox" id="f_share" checked>
+          <span>You may show my <em>&ldquo;what the children enjoyed most&rdquo;</em> comment, together with
+          my centre's name, on the public booking page to help other centres decide.
+          Untick to keep it private — your ratings still count either way.</span>
+        </label>
       </div></div>
 
       <div class="err" id="fErr"></div>
@@ -221,7 +232,7 @@ footer{text-align:center;color:var(--muted);font-size:12.5px;padding:22px 0 0;bo
           <thead><tr>
             <th>Submitted</th><th>Centre</th><th>Visit</th><th>From</th>
             <th>Overall</th><th>Guide</th><th>Children</th><th>Safety</th><th>Venue</th>
-            <th>Length</th><th>Recommend</th><th>Enjoyed most</th><th>Could improve</th><th></th>
+            <th>Length</th><th>Recommend</th><th>Enjoyed most</th><th>Public?</th><th>Could improve</th><th></th>
           </tr></thead>
           <tbody></tbody>
         </table>
@@ -368,6 +379,7 @@ $("#frm").onsubmit = async e => {
     venue:   state.ratings.venue   || 0,
     length: state.length,
     recommend: state.recommend,
+    shareOk: $("#f_share").checked,      // gates public quoting on the booking page
     liked: $("#f_liked").value.trim(),
     improve: $("#f_improve").value.trim(),
     created: Date.now()
@@ -460,6 +472,7 @@ function renderResults(){
     <td class="s">${stars(r.safety)}</td><td class="s">${stars(r.venue)}</td>
     <td>${esc(r.length || "—")}</td><td>${esc(r.recommend || "—")}</td>
     <td style="min-width:180px">${esc(r.liked || "—")}</td>
+    <td>${r.shareOk ? '<span style="color:var(--green-b);font-weight:700">Shown</span>' : '<span class="hint">Private</span>'}</td>
     <td style="min-width:180px">${esc(r.improve || "—")}</td>
     <td><button class="btn danger" data-del="${esc(r.id)}" type="button" style="padding:4px 10px;font-size:12px">Delete</button></td>
   </tr>`).join("");
@@ -473,12 +486,12 @@ function renderResults(){
 
 $("#btnPrint").onclick = () => window.print();
 $("#btnCsv").onclick = () => {
-  const head = ["Submitted","Centre","Centre Type","Visit Date","Name","Role","Overall","Guide","Children's Engagement","Safety","Venue","Session Length","Recommend","Enjoyed Most","Could Improve"];
+  const head = ["Submitted","Centre","Centre Type","Visit Date","Name","Role","Overall","Guide","Children's Engagement","Safety","Venue","Session Length","Recommend","Enjoyed Most","Comment Public?","Could Improve"];
   const q = v => `"${String(v ?? "").replace(/"/g,'""')}"`;
   const rows = [...feedback].sort((a,b) => (a.created||0) - (b.created||0)).map(r =>
     [new Date(r.created).toISOString(), r.centre, r.centreType, r.visitDate, r.name, r.role,
      r.overall||"", r.guide||"", r.engage||"", r.safety||"", r.venue||"",
-     r.length, r.recommend, r.liked, r.improve].map(q).join(","));
+     r.length, r.recommend, r.liked, r.shareOk ? "Yes" : "No", r.improve].map(q).join(","));
   const csv = "﻿" + [head.map(q).join(","), ...rows].join("\r\n");
   const a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob([csv], {type:"text/csv;charset=utf-8"}));
