@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Crestar × TridentAir Factory Tour — Feedback</title>
+<style>
+:root{
+  --navy:#12314f; --navy2:#1c4a76; --teal:#0f8b8d; --teal-dk:#0a6d6f;
+  --green:#dff5e6; --green-b:#2f9e5f; --amber:#fff3d6; --amber-b:#c98a10;
+  --grey:#eef1f5; --red:#c0392b; --star:#f2a900;
+  --ink:#1b2733; --muted:#6b7a8c; --line:#dfe5ec; --bg:#f5f7fa;
+  --radius:10px; --shadow:0 1px 3px rgba(18,49,79,.08),0 8px 24px rgba(18,49,79,.06);
+}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color:var(--ink);background:var(--bg)}
+.wrap{max-width:760px;margin:0 auto;padding:0 18px calc(60px + env(safe-area-inset-bottom))}
+.wide{max-width:1120px}
+
+header{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);color:#fff;padding:28px 0 24px;margin-bottom:22px}
+header .wrap{padding-bottom:0}
+.brand{font-size:13px;letter-spacing:.14em;text-transform:uppercase;opacity:.8;margin-bottom:6px}
+h1{margin:0 0 6px;font-size:27px;letter-spacing:-.4px;font-weight:650}
+.sub{opacity:.85;font-size:14.5px;margin:0}
+
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:18px;overflow:hidden}
+.card .hd{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.card .hd h2{margin:0;font-size:16px;font-weight:650}
+.card .bd{padding:18px}
+
+label,.lbl{display:block;font-size:12.5px;font-weight:650;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em}
+.hint{font-size:12px;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0}
+.req{color:var(--red)}
+input,select,textarea{width:100%;padding:10px 11px;border:1px solid var(--line);border-radius:7px;font:inherit;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--teal);box-shadow:0 0 0 3px rgba(15,139,141,.14)}
+.field{margin-bottom:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* star rows */
+.rate{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.rate:last-child{border-bottom:0}
+.rate .q{font-weight:600;font-size:14.5px}
+.stars{display:flex;gap:4px}
+.stars button{background:none;border:0;padding:2px 3px;font-size:29px;line-height:1;color:#d5dbe2;cursor:pointer;transition:transform .1s,color .1s}
+.stars button:hover{transform:scale(1.12)}
+.stars button.on{color:var(--star)}
+.stars button:focus-visible{outline:2px solid var(--teal);border-radius:4px}
+
+/* chip choices */
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chips button{padding:8px 15px;border-radius:99px;border:1px solid var(--line);background:#fff;font:inherit;font-weight:600;font-size:14px;color:var(--muted);cursor:pointer}
+.chips button.on{background:var(--teal);border-color:var(--teal);color:#fff}
+
+.err{color:var(--red);font-size:13px;margin:4px 0 12px;display:none}
+.err.on{display:block}
+.btn{padding:10px 18px;border-radius:7px;border:1px solid var(--line);background:#fff;font:inherit;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--grey)}
+.btn.pri{background:var(--teal);border-color:var(--teal);color:#fff}
+.btn.pri:hover{background:var(--teal-dk)}
+.btn.danger{color:var(--red);border-color:#f0c9c4}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.big{width:100%;padding:14px;font-size:16px}
+
+.thanks{text-align:center;padding:36px 22px}
+.thanks .tick{width:64px;height:64px;border-radius:50%;background:var(--green);color:var(--green-b);font-size:34px;line-height:64px;margin:0 auto 14px;font-weight:700}
+.thanks h2{margin:0 0 8px;font-size:22px}
+.thanks p{color:var(--muted);margin:0 0 18px}
+.offline{background:var(--amber);border:1px solid var(--amber-b);color:#7a5405;border-radius:8px;padding:10px 13px;font-size:13.5px;margin:0 auto 18px;max-width:460px;text-align:left}
+
+/* organiser */
+.orgLink{text-align:center;margin-top:26px;font-size:13px}
+.orgLink a{color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;padding:18px}
+.stat{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:11px 13px}
+.stat .k{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.stat .v{font-size:22px;font-weight:650}
+.stat .v small{font-size:13px;color:var(--muted);font-weight:500}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{text-align:left;padding:9px 11px;background:#fafbfc;border-bottom:1px solid var(--line);font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);white-space:nowrap}
+td{padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+.tablewrap{overflow-x:auto}
+.empty{padding:30px;text-align:center;color:var(--muted)}
+.s{color:var(--star);letter-spacing:1px;white-space:nowrap}
+
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(90px);background:var(--navy);color:#fff;
+  padding:12px 22px;border-radius:99px;font-size:14px;font-weight:600;box-shadow:0 8px 30px rgba(0,0,0,.25);
+  transition:transform .3s;z-index:99;pointer-events:none;max-width:90vw}
+.toast.on{transform:translateX(-50%) translateY(0)}
+footer{text-align:center;color:var(--muted);font-size:12.5px;padding:22px 0 0;border-top:1px solid var(--line);margin-top:26px}
+@media (max-width:600px){.grid2{grid-template-columns:1fr}h1{font-size:22px}.stars button{font-size:32px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand">Crestar × TridentAir</div>
+    <h1>How was your factory visit?</h1>
+    <p class="sub">Your feedback helps us make the tour better for the next group. It takes about 2 minutes.</p>
+  </div>
+</header>
+
+<div class="wrap" id="main">
+
+  <!-- ============ FORM ============ -->
+  <section id="formView">
+    <form id="frm" autocomplete="on" novalidate>
+
+      <div class="card"><div class="bd">
+        <div class="field">
+          <label for="f_centre">Your preschool / centre <span class="req">*</span></label>
+          <select id="f_centre">
+            <option value="">Loading centres…</option>
+          </select>
+        </div>
+        <div class="field" id="otherWrap" style="display:none">
+          <label for="f_centreOther">Centre name <span class="req">*</span></label>
+          <input id="f_centreOther" placeholder="e.g. EQE Sunshine Place">
+        </div>
+        <div class="grid2">
+          <div class="field">
+            <label for="f_name">Your name <span class="hint">(optional)</span></label>
+            <input id="f_name" autocomplete="name">
+          </div>
+          <div class="field">
+            <span class="lbl">You are a…</span>
+            <div class="chips" data-chip="role">
+              <button type="button" data-v="Teacher">Teacher</button>
+              <button type="button" data-v="Parent / chaperone">Parent / chaperone</button>
+              <button type="button" data-v="Other">Other</button>
+            </div>
+          </div>
+        </div>
+      </div></div>
+
+      <div class="card">
+        <div class="hd"><h2>Rate your visit</h2><span class="hint">1 = poor · 5 = excellent</span></div>
+        <div class="bd" id="rates" style="padding-top:6px;padding-bottom:6px"></div>
+      </div>
+
+      <div class="card"><div class="bd">
+        <div class="field">
+          <span class="lbl">The 2-hour session length was…</span>
+          <div class="chips" data-chip="length">
+            <button type="button" data-v="Too short">Too short</button>
+            <button type="button" data-v="Just right">Just right</button>
+            <button type="button" data-v="Too long">Too long</button>
+          </div>
+        </div>
+        <div class="field">
+          <label for="f_liked">What did the children enjoy most?</label>
+          <textarea id="f_liked" rows="3" placeholder="e.g. seeing the machines up close, the demonstration…"></textarea>
+        </div>
+        <div class="field">
+          <label for="f_improve">What could we do better?</label>
+          <textarea id="f_improve" rows="3" placeholder="Anything about timing, safety, activities, facilities…"></textarea>
+        </div>
+        <div class="field" style="margin-bottom:4px">
+          <span class="lbl">Would you recommend this tour to other centres?</span>
+          <div class="chips" data-chip="recommend">
+            <button type="button" data-v="Yes">Yes</button>
+            <button type="button" data-v="Maybe">Maybe</button>
+            <button type="button" data-v="No">No</button>
+          </div>
+        </div>
+      </div></div>
+
+      <div class="err" id="fErr"></div>
+      <button class="btn pri big" id="btnSubmit" type="submit">Submit feedback</button>
+    </form>
+  </section>
+
+  <!-- ============ THANK YOU ============ -->
+  <section id="thanksView" hidden>
+    <div class="card thanks">
+      <div class="tick">✓</div>
+      <h2>Thank you!</h2>
+      <p>Your feedback has been received by the Crestar team.</p>
+      <div class="offline" id="offlineNote" hidden>
+        <strong>No connection right now.</strong> Your feedback is saved on this device and will be sent
+        automatically the next time this page is opened with internet access.
+      </div>
+      <button class="btn" id="btnAnother" type="button">Submit another response</button>
+    </div>
+  </section>
+
+  <div class="orgLink"><a href="#" id="orgOpen">Organiser: view responses</a></div>
+</div>
+
+<!-- ============ ORGANISER RESULTS ============ -->
+<div class="wrap wide" id="orgView" hidden>
+  <div class="card" id="pinGate">
+    <div class="hd"><h2>Organiser access</h2></div>
+    <div class="bd">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <input id="pinInput" type="password" placeholder="Passcode" style="max-width:220px" autocomplete="off">
+        <button class="btn pri" id="pinGo" type="button">Unlock</button>
+        <button class="btn" id="orgBack" type="button">Back to form</button>
+      </div>
+      <div class="err" id="pinErr">Incorrect passcode.</div>
+    </div>
+  </div>
+
+  <div id="results" hidden>
+    <div class="card">
+      <div class="hd">
+        <h2>Feedback summary</h2>
+        <div style="display:flex;gap:8px">
+          <button class="btn" id="btnCsv" type="button">Export CSV</button>
+          <button class="btn" id="btnPrint" type="button">Print</button>
+          <button class="btn" id="orgBack2" type="button">Back to form</button>
+        </div>
+      </div>
+      <div class="stats" id="stats"></div>
+    </div>
+    <div class="card">
+      <div class="hd"><h2>All responses</h2><span class="hint" id="respCount"></span></div>
+      <div class="tablewrap">
+        <table id="tblFb">
+          <thead><tr>
+            <th>Submitted</th><th>Centre</th><th>Visit</th><th>From</th>
+            <th>Overall</th><th>Guide</th><th>Children</th><th>Safety</th><th>Venue</th>
+            <th>Length</th><th>Recommend</th><th>Enjoyed most</th><th>Could improve</th><th></th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="empty" id="fbEmpty">No feedback yet.</div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap"><footer>Crestar × TridentAir Factory Tour 2026 · Visitor feedback</footer></div>
+<div class="toast" id="toast"></div>
+
+<script type="module">
+/* ══════════════════════════════════════════════════════════════════
+   Visitor feedback for the factory tour. Shares the octocrm1 project
+   and the SAME node as the booking page (`crestarTour2026`), writing to
+   `crestarTour2026/feedback/<id>` — already covered by the published
+   rule, so no Firebase console change is needed.
+   Each response gets a client-made id and is written with set() to
+   that id, so a retry after a dropped connection can never duplicate.
+   ══════════════════════════════════════════════════════════════════ */
+const FIREBASE_CONFIG = {
+  apiKey:            "AIzaSyCSQAS7mFBlTfmz0FVWaSLgI-Puk1Y3sN4",
+  authDomain:        "octocrm1.firebaseapp.com",
+  databaseURL:       "https://octocrm1-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:         "octocrm1",
+  storageBucket:     "octocrm1.firebasestorage.app",
+  messagingSenderId: "212247591529",
+  appId:             "1:212247591529:web:4a076e40a71b59646b00f8"
+};
+const NODE = "crestarTour2026";
+const ORGANISER_PIN = "crestar2026";          // soft gate only — same as the booking page
+const LS_QUEUE = "crestar_feedback_queue_2026";
+const WRITE_TIMEOUT = 8000;
+
+const RATINGS = [
+  ["overall", "Overall experience", true],
+  ["guide",   "Tour guide & explanations"],
+  ["engage",  "Children's engagement & enjoyment"],
+  ["safety",  "Safety & organisation"],
+  ["venue",   "Venue & facilities"]
+];
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const sortKey = d => { const [dd,mm,yy] = String(d).split("/"); return (yy||"")+(mm||"")+(dd||""); };
+
+let api = null, db = null;
+let bookings = [];
+let state = { ratings:{}, role:"", length:"", recommend:"" };
+let submitting = false;
+
+/* ── rating + chip widgets ─────────────────────────────────────────── */
+$("#rates").innerHTML = RATINGS.map(([k, q, req]) => `
+  <div class="rate">
+    <div class="q">${esc(q)}${req ? ' <span class="req">*</span>' : ''}</div>
+    <div class="stars" role="radiogroup" aria-label="${esc(q)}" data-rate="${k}">
+      ${[1,2,3,4,5].map(n => `<button type="button" role="radio" aria-checked="false" aria-label="${n} of 5" data-n="${n}">★</button>`).join("")}
+    </div>
+  </div>`).join("");
+
+document.querySelectorAll("[data-rate]").forEach(grp => {
+  const k = grp.dataset.rate;
+  const paint = n => grp.querySelectorAll("button").forEach(b => {
+    const on = +b.dataset.n <= n;
+    b.classList.toggle("on", on);
+    b.setAttribute("aria-checked", String(+b.dataset.n === n));
+  });
+  grp.querySelectorAll("button").forEach(b => b.onclick = () => {
+    const n = +b.dataset.n;
+    state.ratings[k] = state.ratings[k] === n ? 0 : n;   // tap same star again to clear
+    paint(state.ratings[k]);
+  });
+  grp._paint = paint;
+});
+
+document.querySelectorAll("[data-chip]").forEach(grp => {
+  const k = grp.dataset.chip;
+  grp.querySelectorAll("button").forEach(b => b.onclick = () => {
+    state[k] = state[k] === b.dataset.v ? "" : b.dataset.v;
+    grp.querySelectorAll("button").forEach(x => x.classList.toggle("on", x.dataset.v === state[k]));
+  });
+});
+
+/* ── centre dropdown, fed from real bookings ───────────────────────── */
+function renderCentres(){
+  const sel = $("#f_centre"), keep = sel.value;
+  const sorted = [...bookings].sort((a,b) => sortKey(a.date).localeCompare(sortKey(b.date)));
+  sel.innerHTML = `<option value="">Select your centre…</option>` +
+    sorted.map(b => `<option value="${esc(b.id)}">${esc(b.centre)} — ${esc(b.date)}</option>`).join("") +
+    `<option value="__other">My centre isn't listed</option>`;
+  if([...sel.options].some(o => o.value === keep)) sel.value = keep;
+  toggleOther();
+}
+function toggleOther(){ $("#otherWrap").style.display = $("#f_centre").value === "__other" ? "block" : "none"; }
+$("#f_centre").onchange = toggleOther;
+
+/* ── local queue (offline safety net) ──────────────────────────────── */
+const readQ  = () => { try{ return JSON.parse(localStorage.getItem(LS_QUEUE)) || []; }catch{ return []; } };
+const writeQ = q => { try{ localStorage.setItem(LS_QUEUE, JSON.stringify(q)); }catch{} };
+function enqueue(rec){ const q = readQ().filter(r => r.id !== rec.id); q.push(rec); writeQ(q); }
+
+const withTimeout = (p, ms) => Promise.race([p, new Promise((_,rej) => setTimeout(() => rej(new Error("TIMEOUT")), ms))]);
+const sendOne = rec => withTimeout(api.set(api.ref(db, `${NODE}/feedback/${rec.id}`), rec), WRITE_TIMEOUT);
+
+async function flushQueue(){
+  if(!db) return;
+  const q = readQ();
+  if(!q.length) return;
+  const left = [];
+  for(const rec of q){ try{ await sendOne(rec); }catch{ left.push(rec); } }
+  writeQ(left);
+  if(left.length < q.length) toast(`Sent ${q.length - left.length} saved response${q.length-left.length===1?"":"s"}`);
+}
+addEventListener("online", flushQueue);
+
+/* ── submit ─────────────────────────────────────────────────────────── */
+function showErr(msg){ const e = $("#fErr"); e.textContent = msg; e.classList.add("on"); e.scrollIntoView({block:"center",behavior:"smooth"}); }
+
+$("#frm").onsubmit = async e => {
+  e.preventDefault();
+  if(submitting) return;
+  $("#fErr").classList.remove("on");
+
+  const sel = $("#f_centre").value;
+  const bk  = bookings.find(b => b.id === sel);
+  const other = $("#f_centreOther").value.trim();
+  if(!sel) return showErr("Please select your centre.");
+  if(sel === "__other" && !other) return showErr("Please type your centre name.");
+  if(!state.ratings.overall) return showErr("Please give an overall rating (tap the stars).");
+
+  const rec = {
+    id: "fb_" + Date.now().toString(36) + Math.random().toString(36).slice(2,7),
+    centre: bk ? bk.centre : other,
+    visitDate: bk ? bk.date : "",
+    centreType: bk ? (bk.type || "") : "",
+    bookingId: bk ? bk.id : "",
+    name: $("#f_name").value.trim(),
+    role: state.role,
+    overall: state.ratings.overall || 0,
+    guide:   state.ratings.guide   || 0,
+    engage:  state.ratings.engage  || 0,
+    safety:  state.ratings.safety  || 0,
+    venue:   state.ratings.venue   || 0,
+    length: state.length,
+    recommend: state.recommend,
+    liked: $("#f_liked").value.trim(),
+    improve: $("#f_improve").value.trim(),
+    created: Date.now()
+  };
+
+  submitting = true;
+  const btn = $("#btnSubmit");
+  btn.disabled = true; btn.textContent = "Sending…";
+  let offline = false;
+  try{
+    if(!db) throw new Error("NO_DB");
+    await sendOne(rec);
+  }catch(err){
+    console.warn("Feedback not sent, queued locally:", err);
+    enqueue(rec);
+    offline = true;
+  }finally{
+    submitting = false;
+    btn.disabled = false; btn.textContent = "Submit feedback";
+  }
+  $("#offlineNote").hidden = !offline;
+  $("#formView").hidden = true;
+  $("#thanksView").hidden = false;
+  scrollTo({top:0, behavior:"smooth"});
+};
+
+function resetForm(){
+  $("#frm").reset();
+  state = { ratings:{}, role:"", length:"", recommend:"" };
+  document.querySelectorAll("[data-rate]").forEach(g => g._paint(0));
+  document.querySelectorAll("[data-chip] button").forEach(b => b.classList.remove("on"));
+  toggleOther();
+}
+$("#btnAnother").onclick = () => { resetForm(); $("#thanksView").hidden = true; $("#formView").hidden = false; };
+
+/* ══════════════════════════════════════════════════════════════════
+   ORGANISER RESULTS
+   ══════════════════════════════════════════════════════════════════ */
+let feedback = [];
+let unlocked = false;
+
+function showOrg(on){
+  $("#main").hidden = on;
+  $("#orgView").hidden = !on;
+  scrollTo({top:0});
+}
+$("#orgOpen").onclick = e => { e.preventDefault(); showOrg(true); if(!unlocked) setTimeout(() => $("#pinInput").focus(), 50); };
+$("#orgBack").onclick = $("#orgBack2").onclick = () => showOrg(false);
+
+$("#pinGo").onclick = () => {
+  if($("#pinInput").value.trim() !== ORGANISER_PIN){ $("#pinErr").classList.add("on"); return; }
+  unlocked = true;
+  $("#pinErr").classList.remove("on");
+  $("#pinInput").value = "";
+  $("#pinGate").hidden = true;
+  $("#results").hidden = false;
+  if(!db){ toast("Not connected — responses can't be loaded"); return; }
+  api.onValue(api.ref(db, NODE + "/feedback"), snap => {
+    feedback = Object.entries(snap.val() || {}).map(([id, r]) => ({ ...r, id }));
+    renderResults();
+  }, err => toast("Could not load responses: " + err.message));
+};
+$("#pinInput").addEventListener("keydown", e => { if(e.key === "Enter") $("#pinGo").click(); });
+
+const stars = n => n ? "★".repeat(n) + '<span style="color:#d5dbe2">' + "★".repeat(5-n) + "</span>" : '<span style="color:var(--muted)">—</span>';
+const avg = k => { const v = feedback.map(r => +r[k] || 0).filter(Boolean); return v.length ? (v.reduce((a,b)=>a+b,0)/v.length) : 0; };
+const fmtWhen = t => { const d = new Date(t); return isNaN(d) ? "" : d.toLocaleString("en-SG",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}); };
+
+function renderResults(){
+  const n = feedback.length;
+  const rec = feedback.filter(r => r.recommend).length;
+  const yes = feedback.filter(r => r.recommend === "Yes").length;
+  const centres = new Set(feedback.map(r => r.centre).filter(Boolean)).size;
+  $("#stats").innerHTML =
+    `<div class="stat"><div class="k">Responses</div><div class="v">${n} <small>from ${centres} centre${centres===1?"":"s"}</small></div></div>` +
+    RATINGS.map(([k, q]) => { const a = avg(k);
+      return `<div class="stat"><div class="k">${esc(q)}</div><div class="v">${a ? a.toFixed(1) : "—"} <small>/ 5</small></div></div>`; }).join("") +
+    `<div class="stat"><div class="k">Would recommend</div><div class="v">${rec ? Math.round(yes/rec*100) + "%" : "—"} <small>${rec ? `${yes} of ${rec}` : ""}</small></div></div>`;
+
+  const sorted = [...feedback].sort((a,b) => (b.created||0) - (a.created||0));
+  $("#respCount").textContent = `${n} response${n===1?"":"s"}`;
+  $("#fbEmpty").style.display = n ? "none" : "block";
+  const tb = $("#tblFb").tBodies[0];
+  tb.innerHTML = sorted.map(r => `<tr>
+    <td style="white-space:nowrap">${esc(fmtWhen(r.created))}</td>
+    <td><strong>${esc(r.centre)}</strong>${r.centreType ? `<br><span class="hint">${esc(r.centreType)}</span>` : ""}</td>
+    <td style="white-space:nowrap">${esc(r.visitDate || "—")}</td>
+    <td>${esc(r.name || "—")}${r.role ? `<br><span class="hint">${esc(r.role)}</span>` : ""}</td>
+    <td class="s">${stars(r.overall)}</td><td class="s">${stars(r.guide)}</td><td class="s">${stars(r.engage)}</td>
+    <td class="s">${stars(r.safety)}</td><td class="s">${stars(r.venue)}</td>
+    <td>${esc(r.length || "—")}</td><td>${esc(r.recommend || "—")}</td>
+    <td style="min-width:180px">${esc(r.liked || "—")}</td>
+    <td style="min-width:180px">${esc(r.improve || "—")}</td>
+    <td><button class="btn danger" data-del="${esc(r.id)}" type="button" style="padding:4px 10px;font-size:12px">Delete</button></td>
+  </tr>`).join("");
+  tb.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
+    const r = feedback.find(x => x.id === b.dataset.del);
+    if(!r || !confirm(`Delete this response from ${r.centre || "unknown centre"}?\nThis cannot be undone.`)) return;
+    try{ await api.remove(api.ref(db, `${NODE}/feedback/${r.id}`)); toast("Response deleted"); }
+    catch(e){ toast("Could not delete: " + e.message); }
+  });
+}
+
+$("#btnPrint").onclick = () => window.print();
+$("#btnCsv").onclick = () => {
+  const head = ["Submitted","Centre","Centre Type","Visit Date","Name","Role","Overall","Guide","Children's Engagement","Safety","Venue","Session Length","Recommend","Enjoyed Most","Could Improve"];
+  const q = v => `"${String(v ?? "").replace(/"/g,'""')}"`;
+  const rows = [...feedback].sort((a,b) => (a.created||0) - (b.created||0)).map(r =>
+    [new Date(r.created).toISOString(), r.centre, r.centreType, r.visitDate, r.name, r.role,
+     r.overall||"", r.guide||"", r.engage||"", r.safety||"", r.venue||"",
+     r.length, r.recommend, r.liked, r.improve].map(q).join(","));
+  const csv = "﻿" + [head.map(q).join(","), ...rows].join("\r\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([csv], {type:"text/csv;charset=utf-8"}));
+  a.download = "Crestar_FactoryTour_Feedback_2026.csv";
+  a.click(); URL.revokeObjectURL(a.href);
+};
+
+let toastT;
+function toast(msg){
+  const t = $("#toast"); t.textContent = msg; t.classList.add("on");
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("on"), 3200);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   BOOT — the form works even if Firebase never loads (offline queue)
+   ══════════════════════════════════════════════════════════════════ */
+renderCentres();
+(async () => {
+  try{
+    const [app, rt] = await Promise.all([
+      import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"),
+      import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js")
+    ]);
+    api = rt;
+    db  = rt.getDatabase(app.initializeApp(FIREBASE_CONFIG));
+    rt.onValue(rt.ref(db, NODE + "/bookings"), snap => {
+      bookings = Object.entries(snap.val() || {}).map(([id, b]) => ({ ...b, id }));
+      renderCentres();
+    }, err => { console.error(err); renderCentres(); });
+    flushQueue();
+  }catch(e){
+    console.error("Firebase unavailable:", e);
+    renderCentres();
+  }
+})();
+</script>
+</body>
+</html>
